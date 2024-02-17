@@ -1,12 +1,11 @@
 #!/usr/bin/python3
 """
-use table relationship to access and print city and state
+update state: given id, change state name
 parameters given to script: username, password, database
 """
 
 from sys import argv
-from relationship_state import Base, State
-from relationship_city import City
+from model_state import Base, State
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -23,11 +22,9 @@ if __name__ == "__main__":
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    # use table relationship to access and print city and state
-    rows = session.query(State).order_by(State.id).all()
-    for state in rows:
-        print("{}: {}".format(state.id, state.name))
-        for city in state.cities:
-            print("    {}: {}".format(city.id, city.name))
+    # find and update state (run #7 to see table printed)
+    state = session.query(State).filter_by(id=2).first()
+    state.name = "New Mexico"
 
+    session.commit()
     session.close()
